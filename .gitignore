@@ -9,3 +9,5 @@ wandb/
 .vscode/
 beat_this.egg-info/
 build/
+
+.DS_Store
