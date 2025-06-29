@@ -29,7 +29,7 @@ def main(args):
     params_str = f"{'noval ' if not args.val else ''}{'hung ' if args.hung_data else ''}{'fold' + str(args.fold) + ' ' if args.fold is not None else ''}{args.loss}-h{args.transformer_dim}-aug{args.tempo_augmentation}{args.pitch_augmentation}{args.mask_augmentation}{' nosumH ' if not args.sum_head else ''}{' nopartialT ' if not args.partial_transformers else ''}"
     if args.logger == "wandb":
         logger = WandbLogger(
-            project="beat_this", name=f"{args.name} {params_str}".strip()
+            project=args.wandb_project, name=f"{args.name} {params_str}".strip()
         )
     else:
         logger = None
@@ -191,6 +191,7 @@ if __name__ == "__main__":
     parser.add_argument("--lr", type=float, default=0.0008)
     parser.add_argument("--weight-decay", type=float, default=0.01)
     parser.add_argument("--logger", type=str, choices=["wandb", "none"], default="none")
+    parser.add_argument("--wandb-project", type=str, default="beat_this", help="Wandb project name")
     parser.add_argument("--num-workers", type=int, default=8)
     parser.add_argument("--n-heads", type=int, default=16)
     parser.add_argument("--fps", type=int, default=50, help="The spectrograms fps.")
