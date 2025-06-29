@@ -8,3 +8,9 @@ soxr==0.3.7
 torch==2.3.1
 torchaudio==2.3.1
 tqdm==4.66.4
+pytorch-lightning==2.5.2
+pandas
+pedalboard
+git+https://github.com/mir-dataset-loaders/mirdata.git
+mir_eval
+https://github.com/CPJKU/beat_this/archive/main.zip

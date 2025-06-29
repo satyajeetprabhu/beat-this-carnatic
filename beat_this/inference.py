@@ -10,7 +10,7 @@ from beat_this.model.postprocessor import Postprocessor
 from beat_this.preprocessing import LogMelSpect, load_audio
 from beat_this.utils import replace_state_dict_key, save_beat_tsv
 
-CHECKPOINT_URL = "https://cloud.cp.jku.at/public.php/dav/files/7ik4RrBKTS273gp"
+CHECKPOINT_URL = "https://cloud.cp.jku.at/index.php/s/7ik4RrBKTS273gp"
 
 
 def load_checkpoint(checkpoint_path: str, device: str | torch.device = "cpu") -> dict:
@@ -26,8 +26,7 @@ def load_checkpoint(checkpoint_path: str, device: str | torch.device = "cpu") ->
     """
     try:
         # try interpreting as local file name
-        weights_only = {'weights_only': True} if torch.__version__ >= "2" else {}
-        return torch.load(checkpoint_path, map_location=device, **weights_only)
+        return torch.load(checkpoint_path, map_location=device, weights_only=False)
     except FileNotFoundError:
         try:
             if not (
@@ -36,7 +35,7 @@ def load_checkpoint(checkpoint_path: str, device: str | torch.device = "cpu") ->
             ):
                 # interpret it as a name of one of our checkpoints
                 checkpoint_url = (
-                    f"{CHECKPOINT_URL}/{checkpoint_path}.ckpt"
+                    f"{CHECKPOINT_URL}/download?path=%2F&files={checkpoint_path}.ckpt"
                 )
                 file_name = f"beat_this-{checkpoint_path}.ckpt"
             else:

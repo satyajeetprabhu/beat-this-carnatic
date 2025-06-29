@@ -114,7 +114,7 @@ class BeatTrackingDataset(Dataset):
             / "beats"
             / (stem + ".beats")
         )
-        beat_annotation = np.loadtxt(annotation_path)
+        beat_annotation = np.loadtxt(annotation_path, delimiter=",")
         if beat_annotation.ndim == 2:
             beat_time = beat_annotation[:, 0]
             beat_value = beat_annotation[:, 1].astype(int)
@@ -282,6 +282,7 @@ class BeatDataModule(pl.LightningDataModule):
         length_based_oversampling_factor=0,
         fold=None,
         predict_datasplit="test",
+        annotation_dirs=None,
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -302,6 +303,12 @@ class BeatDataModule(pl.LightningDataModule):
         self.fold = fold
         self.predict_datasplit = predict_datasplit
 
+        annotation_dir = self.data_dir / "annotations"
+        if not annotation_dirs:
+            self.annotation_dirs = [d for d in annotation_dir.iterdir()]
+        else:
+            self.annotation_dirs = [annotation_dir / d for d in annotation_dirs]
+
     def setup(self, stage):
         if self.initialized.get(stage, False):
             return
@@ -314,7 +321,7 @@ class BeatDataModule(pl.LightningDataModule):
             self.val_items = []
             self.train_items = []
             split_file = "8-folds.split" if self.fold is not None else "single.split"
-            for dataset_dir in annotation_dir.iterdir():
+            for dataset_dir in self.annotation_dirs:
                 if not dataset_dir.is_dir() or not (dataset_dir / split_file).exists():
                     continue
                 dataset = dataset_dir.name

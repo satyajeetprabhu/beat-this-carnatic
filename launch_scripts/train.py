@@ -1,5 +1,13 @@
 import argparse
 from pathlib import Path
+import os
+
+'''
+# Disable MPS even if available
+if os.environ.get("PYTORCH_ENABLE_MPS_FALLBACK", "1") == "1":
+    os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "0"
+    print("Disabling MPS fallback for PyTorch.")
+'''
 
 import torch
 from pytorch_lightning import Trainer, seed_everything
@@ -8,6 +16,7 @@ from pytorch_lightning.loggers import WandbLogger
 
 from beat_this.dataset import BeatDataModule
 from beat_this.model.pl_module import PLBeatThis
+from beat_this.inference import load_checkpoint
 
 
 def main(args):
@@ -31,10 +40,14 @@ def main(args):
         torch.backends.cuda.enable_mem_efficient_sdp(False)
         torch.backends.cuda.enable_math_sdp(False)
 
-    data_dir = Path(__file__).parent.parent.relative_to(Path.cwd()) / "data"
-    checkpoint_dir = (
-        Path(__file__).parent.parent.relative_to(Path.cwd()) / "checkpoints"
-    )
+    #data_dir = Path(__file__).parent.parent.relative_to(Path.cwd()) / "data"
+    data_dir = Path.cwd() / "data"
+    print(f"Using data directory: {data_dir}")
+
+    #checkpoint_dir = (Path(__file__).parent.parent.relative_to(Path.cwd()) / "checkpoints")
+    checkpoint_dir = Path.cwd() / "checkpoints"
+    print(f"Using checkpoint directory: {checkpoint_dir}")
+
     augmentations = {}
     if args.tempo_augmentation:
         augmentations["tempo"] = {"min": -20, "max": 20, "stride": 4}
@@ -64,6 +77,7 @@ def main(args):
         hung_data=args.hung_data,
         no_val=not args.val,
         fold=args.fold,
+        annotation_dirs=[args.annotation_dir] if args.annotation_dir else None,
     )
     datamodule.setup(stage="fit")
 
@@ -74,26 +88,37 @@ def main(args):
         "frontend": args.frontend_dropout,
         "transformer": args.transformer_dropout,
     }
-    pl_model = PLBeatThis(
-        spect_dim=128,
-        fps=50,
-        transformer_dim=args.transformer_dim,
-        ff_mult=4,
-        n_layers=args.n_layers,
-        stem_dim=32,
-        dropout=dropout,
-        lr=args.lr,
-        weight_decay=args.weight_decay,
-        pos_weights=pos_weights,
-        head_dim=32,
-        loss_type=args.loss,
-        warmup_steps=args.warmup_steps,
-        max_epochs=args.max_epochs,
-        use_dbn=args.dbn,
-        eval_trim_beats=args.eval_trim_beats,
-        sum_head=args.sum_head,
-        partial_transformers=args.partial_transformers,
-    )
+    
+    # Create model - either from checkpoint or new
+    if args.checkpoint:
+        checkpoint_path = checkpoint_dir / f"{args.checkpoint}.ckpt"
+        print(f"Loading model from checkpoint: {checkpoint_path}")
+        checkpoint = load_checkpoint(checkpoint_path)
+        pl_model = PLBeatThis(**checkpoint["hyper_parameters"])
+        pl_model.load_state_dict(checkpoint["state_dict"])
+    else:
+        pl_model = PLBeatThis(
+            spect_dim=128,
+            fps=50,
+            transformer_dim=args.transformer_dim,
+            ff_mult=4,
+            n_layers=args.n_layers,
+            stem_dim=32,
+            dropout=dropout,
+            lr=args.lr,
+            weight_decay=args.weight_decay,
+            pos_weights=pos_weights,
+            head_dim=32,
+            loss_type=args.loss,
+            warmup_steps=args.warmup_steps,
+            max_epochs=args.max_epochs,
+            use_dbn=args.dbn,
+            eval_trim_beats=args.eval_trim_beats,
+            sum_head=args.sum_head,
+            partial_transformers=args.partial_transformers,
+        )
+    
+    # Apply compilation to the model (works for both new and checkpoint-loaded models)
     for part in args.compile:
         if hasattr(pl_model.model, part):
             setattr(pl_model.model, part, torch.compile(getattr(pl_model.model, part)))
@@ -110,11 +135,17 @@ def main(args):
             filename=f"{args.name} S{args.seed} {params_str}".strip(),
         )
     )
-
+    if args.use_cpu:
+        accelerator = "cpu"
+        devices = 1
+    else:
+        accelerator = "auto"
+        devices = [args.gpu]
+        
     trainer = Trainer(
         max_epochs=args.max_epochs,
-        accelerator="auto",
-        devices=[args.gpu],
+        accelerator=accelerator,
+        devices=devices,
         num_sanity_val_steps=1,
         logger=logger,
         callbacks=callbacks,
@@ -271,7 +302,21 @@ if __name__ == "__main__":
         default=0,
         help="Seed for the random number generators.",
     )
-
+    parser.add_argument(
+        "--checkpoint",
+        type=str,
+        default=None,
+        help="Checkpoint to train on",
+    )
+    parser.add_argument(
+        "--annotation-dir", type=str, default=None, help="Dataset to finetune on"
+    )
+    parser.add_argument(
+    "--use-cpu",
+    default=False,
+    action=argparse.BooleanOptionalAction,
+    help="Force training on CPU (disables MPS/GPU and AMP)",
+)
     args = parser.parse_args()
 
     main(args)
