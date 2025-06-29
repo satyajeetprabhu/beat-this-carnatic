@@ -40,12 +40,12 @@ def main(args):
         torch.backends.cuda.enable_mem_efficient_sdp(False)
         torch.backends.cuda.enable_math_sdp(False)
 
-    #data_dir = Path(__file__).parent.parent.relative_to(Path.cwd()) / "data"
-    data_dir = Path.cwd() / "data"
+    data_dir = Path(__file__).parent.parent.relative_to(Path.cwd()) / "data"
+    #data_dir = Path.cwd() / "data"
     print(f"Using data directory: {data_dir}")
 
-    #checkpoint_dir = (Path(__file__).parent.parent.relative_to(Path.cwd()) / "checkpoints")
-    checkpoint_dir = Path.cwd() / "checkpoints"
+    checkpoint_dir = (Path(__file__).parent.parent.relative_to(Path.cwd()) / "checkpoints")
+    #checkpoint_dir = Path.cwd() / "checkpoints"
     print(f"Using checkpoint directory: {checkpoint_dir}")
 
     augmentations = {}
