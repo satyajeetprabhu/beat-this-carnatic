@@ -71,7 +71,7 @@ def main(args):
         train_length=args.train_length,
         spect_fps=args.fps,
         num_workers=args.num_workers,
-        test_dataset="gtzan",
+        test_dataset=args.test_dataset,
         length_based_oversampling_factor=args.length_based_oversampling_factor,
         augmentations=augmentations,
         hung_data=args.hung_data,
@@ -310,6 +310,12 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--annotation-dir", type=str, default=None, help="Dataset to finetune on"
+    )
+    parser.add_argument(
+        "--test-dataset", 
+        type=str, 
+        default="gtzan", 
+        help="Name of the dataset to use for testing (default: gtzan)"
     )
     parser.add_argument(
     "--use-cpu",
