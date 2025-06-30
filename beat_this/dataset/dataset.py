@@ -370,6 +370,12 @@ class BeatDataModule(pl.LightningDataModule):
             self.val_items.sort()
             self.train_items.sort()
 
+            # Print first train and val file
+            if self.train_items:
+                print("Example train file path:", self.train_items[0])
+            if self.val_items:
+                print("Example val file path:", self.val_items[0])           
+
         # load validation set
         if stage in ("fit", "validate"):
             self.val_dataset = BeatTrackingDataset(
@@ -384,7 +390,7 @@ class BeatDataModule(pl.LightningDataModule):
                 "Validation set:",
                 len(self.val_dataset),
                 "items from:",
-                *sorted(set(item.split("/", 1)[0] for item in self.val_items)),
+                *sorted(set(item.split("/", 1)[0] for item in self.val_items)),    
             )
             self.initialized["validate"] = True
 
@@ -416,6 +422,9 @@ class BeatDataModule(pl.LightningDataModule):
                 f"{self.test_set_name}/{item.stem}"
                 for item in test_annotations_dir.glob("*.beats")
             )
+
+            if self.test_items:
+                print("Example test file path:", self.test_items[0])
             self.test_dataset = BeatTrackingDataset(
                 self.test_items,
                 deterministic=True,
