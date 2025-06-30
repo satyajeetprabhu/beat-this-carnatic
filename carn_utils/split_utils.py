@@ -84,12 +84,9 @@ def reorder_by_taala_proportion(df, train_keys):
 
     return reordered_keys
 
-def export_split_tsv(dataset_path, train_fold_name, seed=0, csv_path='cmr_splits.csv'):
+def export_split_tsv(dataset_path, train_fold, seed=0, csv_path='cmr_splits.csv'):
     
     fold_df = pd.read_csv(csv_path, dtype={'track_id': str})
-    
-    fold_dict = {'cmr-fold1': 1, 'cmr-fold2': 2}
-    train_fold = fold_dict[train_fold_name]
     
     if train_fold == 1:
         test_fold = 2
