@@ -137,7 +137,13 @@ def main(args):
         ModelCheckpoint(
             every_n_epochs=1,
             dirpath=str(checkpoint_dir),
-            filename=f"{args.name} S{args.seed} {params_str}".strip(),
+            filename=(
+                f"{args.name} S{args.seed} {params_str}"
+                "-vloss{val_loss:.3f}"
+                "-fmb{val_F-measure_beat:.2f}"
+                "-fmdb{val_F-measure_downbeat:.2f}"
+            ).strip(),
+
         )
     )
     if args.use_cpu:
