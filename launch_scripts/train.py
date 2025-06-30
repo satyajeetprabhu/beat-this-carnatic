@@ -139,11 +139,12 @@ def main(args):
             dirpath=str(checkpoint_dir),
             filename=(
                 f"{args.name} S{args.seed} {params_str}"
+                "-epoch{epoch:03d}"
                 "-vloss{val_loss:.3f}"
                 "-fmb{val_F-measure_beat:.2f}"
                 "-fmdb{val_F-measure_downbeat:.2f}"
             ).strip(),
-
+            save_top_k=-1,
         )
     )
     if args.use_cpu:
