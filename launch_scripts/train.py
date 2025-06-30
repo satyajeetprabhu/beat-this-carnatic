@@ -193,11 +193,20 @@ if __name__ == "__main__":
         default=0.2,
         help="dropout rate to apply in the main transformer blocks",
     )
+    
+    '''
+    General rule of thumb for Colab T4:
+    Batch size 1: num_workers=0 (no benefit from parallelization)
+    Batch size 2-4: num_workers=1-2 (light parallelization)
+    Batch size 8+: num_workers=2-4 (but rarely go above 4 on Colab)
+    num_workers is 2, which is good for batch size 4 on Colab
+    default values - batch size 8, num_workers 8
+    '''
     parser.add_argument("--lr", type=float, default=0.0008)
     parser.add_argument("--weight-decay", type=float, default=0.01)
     parser.add_argument("--logger", type=str, choices=["wandb", "none"], default="none")
     parser.add_argument("--wandb-project", type=str, default="beat_this", help="Wandb project name")
-    parser.add_argument("--num-workers", type=int, default=8)
+    parser.add_argument("--num-workers", type=int, default=2)
     parser.add_argument("--n-heads", type=int, default=16)
     parser.add_argument("--fps", type=int, default=50, help="The spectrograms fps.")
     parser.add_argument(
@@ -219,7 +228,7 @@ if __name__ == "__main__":
         "--max-epochs", type=int, default=100, help="max epochs for training"
     )
     parser.add_argument(
-        "--batch-size", type=int, default=8, help="batch size for training"
+        "--batch-size", type=int, default=4, help="batch size for training"
     )
     parser.add_argument("--accumulate-grad-batches", type=int, default=8)
     parser.add_argument(
