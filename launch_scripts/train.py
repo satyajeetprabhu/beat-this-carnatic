@@ -39,6 +39,11 @@ def main(args):
         torch.backends.cuda.enable_flash_sdp(True)
         torch.backends.cuda.enable_mem_efficient_sdp(False)
         torch.backends.cuda.enable_math_sdp(False)
+    else:
+        # Disable flash attention and efficient attention for T4 GPU compatibility
+        torch.backends.cuda.enable_flash_sdp(False)
+        torch.backends.cuda.enable_mem_efficient_sdp(False)
+        torch.backends.cuda.enable_math_sdp(True)
 
     data_dir = Path(__file__).parent.parent.relative_to(Path.cwd()) / "data"
     #data_dir = Path.cwd() / "data"
