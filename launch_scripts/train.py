@@ -1,6 +1,7 @@
 import argparse
 from pathlib import Path
 import os
+import time
 
 '''
 # Disable MPS even if available
@@ -13,6 +14,7 @@ import torch
 from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
+import wandb
 
 from beat_this.dataset import BeatDataModule
 from beat_this.model.pl_module import PLBeatThis
@@ -166,8 +168,14 @@ def main(args):
         accumulate_grad_batches=args.accumulate_grad_batches,
         check_val_every_n_epoch=args.val_frequency,
     )
-
+    start_time = time.time()
     trainer.fit(pl_model, datamodule)
+    end_time = time.time()
+
+    train_duration = end_time - start_time
+    # Log training time to W&B
+    wandb.log({"train_time_sec": train_duration})
+    
     trainer.test(pl_model, datamodule)
 
 
