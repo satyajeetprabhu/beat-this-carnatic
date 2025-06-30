@@ -8,6 +8,7 @@ import os
 import shutil
 import pandas as pd
 import mirdata
+import json
 
 
 def copy_by_fold(dataset_path: str, splits_csv_path: str = 'cmr_splits.csv', 
@@ -115,6 +116,12 @@ def copy_by_fold(dataset_path: str, splits_csv_path: str = 'cmr_splits.csv',
                 else:
                     print_msg(f"Track {track_id} not found in dataset")
         
+            # Create info.json file for the fold
+            print_msg(f'Creating info.json for fold {fold_id}')
+            json_path = os.path.join(output_dir, 'annotations', fold_name, 'info.json')
+            text = {"has_downbeats": True}
+            with open(json_path, "w") as f:
+                json.dump(text, f) 
         
         # Create TSV file with audio paths
         audio_paths_df = pd.DataFrame(fold_audio_paths, columns=['fold_name', 'audio_path'])

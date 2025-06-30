@@ -84,9 +84,12 @@ def reorder_by_taala_proportion(df, train_keys):
 
     return reordered_keys
 
-def export_split_tsv(dataset_path, train_fold, seed=0, csv_path='cmr_splits.csv'):
+def export_split_tsv(dataset_path, train_fold_name, seed=0, csv_path='cmr_splits.csv'):
     
     fold_df = pd.read_csv(csv_path, dtype={'track_id': str})
+    
+    fold_dict = {'cmr-fold1': 1, 'cmr-fold2': 2}
+    train_fold = fold_dict[train_fold_name]
     
     if train_fold == 1:
         test_fold = 2
@@ -126,7 +129,7 @@ def export_split_tsv(dataset_path, train_fold, seed=0, csv_path='cmr_splits.csv'
     
     fold_df = pd.DataFrame.from_dict(split_dict, orient='index').reset_index()
     fold_df.columns = ['track', 'fold']
-        
+    
     # Dictionary mapping fold names to their audio folder paths
     available_folds = {
         "1": "data/annotations/cmr-fold1",
@@ -135,17 +138,16 @@ def export_split_tsv(dataset_path, train_fold, seed=0, csv_path='cmr_splits.csv'
     }
 
     target_folder = available_folds[str(train_fold)]
+    fold_df.to_csv(os.path.join(target_folder, "single.split"), sep='\t', index=False, header=False)
 
-    fold_df.to_csv(os.path.join(target_folder, "single.split"), sep='\t', index=False, header=False)    
-    
+    '''    
     data = {"has_downbeats": True}
-
     json_path = os.path.join(target_folder, "info.json")
 
     # Write to JSON
     with open(json_path, "w") as f:
         json.dump(data, f)
-
+    '''
     
         
     
