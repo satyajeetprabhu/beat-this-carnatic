@@ -13,3 +13,4 @@ pandas
 pedalboard
 git+https://github.com/mir-dataset-loaders/mirdata.git
 mir_eval
+wandb
