@@ -370,12 +370,6 @@ class BeatDataModule(pl.LightningDataModule):
             self.val_items.sort()
             self.train_items.sort()
 
-            # Print first train and val file
-            if self.train_items:
-                print("Example train file path:", self.train_items[0])
-            if self.val_items:
-                print("Example val file path:", self.val_items[0])           
-
         # load validation set
         if stage in ("fit", "validate"):
             self.val_dataset = BeatTrackingDataset(
@@ -390,7 +384,11 @@ class BeatDataModule(pl.LightningDataModule):
                 "Validation set:",
                 len(self.val_dataset),
                 "items from:",
-                *sorted(set(item.split("/", 1)[0] for item in self.val_items)),    
+                *sorted(set(item.split("/", 1)[0] for item in self.val_items)),
+                "Example val file path:",
+                self.val_items[-1] if self.val_items else "None",
+                "No of val examples:",
+                len(self.val_items),
             )
             self.initialized["validate"] = True
 
@@ -410,6 +408,10 @@ class BeatDataModule(pl.LightningDataModule):
                 len(self.train_dataset),
                 "items from:",
                 *sorted(set(item.split("/", 1)[0] for item in self.train_items)),
+                "Example train file path:",
+                self.train_items[-1] if self.train_items else "None",
+                "No of train examples:",
+                len(self.train_items),
             )
             self.initialized["fit"] = True
 
@@ -423,8 +425,6 @@ class BeatDataModule(pl.LightningDataModule):
                 for item in test_annotations_dir.glob("*.beats")
             )
 
-            if self.test_items:
-                print("Example test file path:", self.test_items[0])
             self.test_dataset = BeatTrackingDataset(
                 self.test_items,
                 deterministic=True,
@@ -434,7 +434,9 @@ class BeatDataModule(pl.LightningDataModule):
                 spect_fps=self.spect_fps,
             )
             print(
-                "Test set:", len(self.test_dataset), "items from:", self.test_set_name
+                "Test set:", len(self.test_dataset), 
+                "items from:", self.test_set_name, 
+                "Example test file path:", self.test_items[-1] if self.test_items else "None",
             )
             self.initialized["test"] = True
 
