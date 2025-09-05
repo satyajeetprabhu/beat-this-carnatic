@@ -84,7 +84,12 @@ def reorder_by_taala_proportion(df, train_keys):
 
     return reordered_keys
 
-def export_split_tsv(dataset_path, train_fold, seed=0, csv_path='cmr_splits.csv'):
+def export_split_tsv(dataset_path, train_fold, seed=0, csv_path=None):
+    
+    # Set default path relative to this script's location
+    if csv_path is None:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        csv_path = os.path.join(script_dir, 'cmr_splits.csv')
     
     fold_df = pd.read_csv(csv_path, dtype={'track_id': str})
     

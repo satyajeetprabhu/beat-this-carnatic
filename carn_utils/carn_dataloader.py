@@ -11,7 +11,7 @@ import mirdata
 import json
 
 
-def copy_by_fold(dataset_path: str, splits_csv_path: str = 'cmr_splits.csv', 
+def copy_by_fold(dataset_path: str, splits_csv_path: str = None, 
                          output_dir: str = 'data', validate = False, verbose: bool = True) -> None:
     """
     Create dataset splits for Carnatic rhythm dataset by copying audio and annotation files
@@ -33,6 +33,11 @@ def copy_by_fold(dataset_path: str, splits_csv_path: str = 'cmr_splits.csv',
             print(msg)
     
     try:
+        
+        # Set default path relative to this script's location
+        if splits_csv_path is None:
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            splits_csv_path = os.path.join(script_dir, 'cmr_splits.csv')
         
         # Initialize the dataset
         print_msg("Initializing Carnatic rhythm dataset...")
@@ -144,8 +149,8 @@ def main():
     
     parser = argparse.ArgumentParser(description='Create dataset splits for Carnatic rhythm dataset')
     parser.add_argument('dataset_path', help='Path to the Carnatic rhythm dataset')
-    parser.add_argument('--splits-csv', default='cmr_splits.csv', 
-                       help='Path to the CSV file containing fold assignments (default: cmr_splits.csv)')
+    parser.add_argument('--splits-csv', default=None, 
+                       help='Path to the CSV file containing fold assignments (default: auto-detect from script location)')
     parser.add_argument('--output-dir', default='data', 
                        help='Directory where the split data will be stored (default: data)')
     parser.add_argument('--quiet', action='store_true', 

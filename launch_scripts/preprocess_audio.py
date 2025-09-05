@@ -187,7 +187,7 @@ class AudioPreprocessing(object):
         self.annotation_dir = BASEPATH / "data" / "annotations"
         # load data_dir from audio_path.csv which has the format: dataset_name, audio_path
         self.audio_dirs = {
-            row[0]: row[1] for row in pd.read_csv(orig_audio_paths, header=None).values
+            row[0]: row[1] for row in pd.read_csv(orig_audio_paths, header=None, sep='\t').values
         }
         # check if annotations exists, otherwise tell how to obtain them
         if not self.annotation_dir.exists():
