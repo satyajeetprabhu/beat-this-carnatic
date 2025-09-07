@@ -135,6 +135,7 @@ def main(args):
 
     callbacks = [LearningRateMonitor(logging_interval="step")]
     # save only the last model
+    '''
     callbacks.append(
         ModelCheckpoint(
             every_n_epochs=1,
@@ -149,6 +150,25 @@ def main(args):
             save_top_k=-1,
         )
     )
+    '''
+    
+    callbacks.append(
+        ModelCheckpoint(
+            dirpath=str(checkpoint_dir),
+            filename=(
+                f"{args.name} S{args.seed} {params_str}"
+                "-epoch{epoch:03d}"
+                "-vloss{val_loss:.3f}"
+                "-fmb{val_F-measure_beat:.2f}"
+                "-fmdb{val_F-measure_downbeat:.2f}"
+            ).strip(),
+            monitor="val_loss",
+            mode="min",
+            save_top_k=1,
+            save_last=True
+        )
+    )   
+    
     if args.use_cpu:
         accelerator = "cpu"
         devices = 1
