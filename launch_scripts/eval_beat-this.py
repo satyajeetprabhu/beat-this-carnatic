@@ -4,7 +4,7 @@ import argparse
 import numpy as np
 import pandas as pd
 
-ROOT = os.path.abspath(os.path.join(os.getcwd(), '..'))
+ROOT = os.path.abspath(os.path.join(os.getcwd()))
 
 import mirdata
 import mir_eval
