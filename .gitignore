@@ -9,6 +9,7 @@ wandb/
 beat_this.egg-info/
 build/
 
+beat_this_example.ipynb
 preprocess_local.ipynb
 
 .DS_Store
