@@ -12,4 +12,8 @@ build/
 beat_this_example.ipynb
 preprocess_local.ipynb
 
+launch_scripts/clean_checkpoints.py
+launch_scripts/compute_paper_metrics_modified.py
+launch_scripts/compute_paper_metrics.py
+
 .DS_Store
