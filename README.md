@@ -25,7 +25,7 @@ Place the entire `CMR_full_dataset_1.0` folder inside `Datasets/CMR/` in google 
   
 ## Notebooks
 
-To reproduce the results of the study, we provide four notebooks in the `notebooks/`. Each contains a clickable link to run the notebook in Google Colab.  
+To reproduce the results of the study, we provide four notebooks in the `notebooks/` folder. Each contains a clickable link to run the notebook in Google Colab.  
 Run the notebooks in the following order:
 
 1. **`Preprocess.ipynb`**: Creates data splits, preprocesses audio, and organizes data for training
