@@ -22,9 +22,7 @@ Place the entire `CMR_full_dataset_1.0` folder inside `Datasets/CMR/` in google 
    │       └── CMR_full_dataset_1.0/     # Place the entire dataset folder here
    └── Beat_This_CMR/                    # Create manually or will be created by notebooks if run in order below
    ```
-   
-   Update the dataset path in notebooks accordingly. Additionally, create a `Beat_This_CMR/` folder in your drive if not running all the notebooks in order.
-
+  
 ## Notebooks
 
 To reproduce the results of the study, we provide four notebooks in the `notebooks/`. Each contains a clickable link to run the notebook in Google Colab.  
