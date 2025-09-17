@@ -1,6 +1,6 @@
 # Beat This! fine-tuned on the Carnatic Music Rhythm Dataset
 
-This repository is a companion to the Master's thesis "Revisiting Meter Tracking in Carnatic Music using Deep Learning Approaches," submitted towards a Master in Sound and Music Computing at Universitat Pompeu Fabra (August 2025). 
+This repository is a companion to the Master's thesis "[Revisiting Meter Tracking in Carnatic Music using Deep Learning Approaches](https://arxiv.org/abs/2509.11241)", submitted towards a Master in Sound and Music Computing at Universitat Pompeu Fabra (August 2025). 
 
 It includes the implementation of [Beat This!](https://github.com/CPJKU/beat_this) beat and downbeat tracker modified for fine-tuning, specifically on the Carnatic Music Rhythm Dataset (CMR). The notebooks provided can be used to reproduce the study's Beat This baseline (BeatThis-BL) and fine-tuning (BeatThis-FT) results; the evaluation results reported in the study are provided under `output/results/`.
 
