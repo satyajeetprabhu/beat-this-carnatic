@@ -1,6 +1,6 @@
 # Beat This! fine-tuned on the Carnatic Music Rhythm Dataset
 
-This repository is a companion to the Master's thesis "[Revisiting Meter Tracking in Carnatic Music using Deep Learning Approaches](https://arxiv.org/abs/2509.11241)", submitted towards a Master in Sound and Music Computing at Universitat Pompeu Fabra (August 2025). 
+This repository is a companion to the Master's thesis "[Revisiting Meter Tracking in Carnatic Music using Deep Learning Approaches](https://zenodo.org/records/17304733)", submitted towards a Master in Sound and Music Computing at Universitat Pompeu Fabra (August 2025). 
 
 It includes the implementation of [Beat This!](https://github.com/CPJKU/beat_this) beat and downbeat tracker modified for fine-tuning, specifically on the Carnatic Music Rhythm Dataset (CMR). The notebooks provided can be used to reproduce the study's Beat This baseline (BeatThis-BL) and fine-tuning (BeatThis-FT) results; the evaluation results reported in the study are provided under `output/results/`.
 
@@ -21,6 +21,7 @@ Place the entire `CMR_full_dataset_1.0` folder inside `Datasets/CMR/` in google 
    │   └── CMR/
    │       └── CMR_full_dataset_1.0/     # Place the entire dataset folder here
    └── Beat_This_CMR/                    # Create manually or will be created by notebooks if run in order below
+       └── pretrained/                   # Place pretrained checkpoints here for evaluation
    ```
   
 ## Notebooks
@@ -32,6 +33,10 @@ Run the notebooks in the following order:
 2. **`Beat_This_FT.ipynb`**: Fine-tunes Beat This! model with different seeds and cross-validation folds as described in the study
 3. **`Eval_FT.ipynb`**: Evaluates fine-tuned models and exports results to `output/results/`
 4. **`Eval_BL.ipynb`**: Evaluates base Beat This! model on CMR dataset
+
+## Pretrained Checkpoints
+
+The checkpoints trained using `Beat_This_FT.ipynb` are provided separately in this [link](https://drive.google.com/drive/folders/1qPRJoqrQMMJBeHe5ze-3UVdDWPLTr3VF) due to size constraints. Place the checkpoints in a folder named `pretrained/` in the `Beat_This_CMR/` folder in order to directly run `Eval_FT.ipynb`.
 
 ## Weights & Biases (wandb)
 
